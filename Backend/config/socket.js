@@ -8,7 +8,7 @@ const ChatRoom = require('../models/ChatRoom');
 module.exports = (server) => {
     const io = socketIO(server, {
         cors: {
-            origin: ["http://localhost:4200", "http://localhost:3000", "http://localhost:8080"],
+            origin: ["http://localhost:4200", "http://localhost:3000", "http://localhost:8080","https://chat-application-mean.onrender.com","https://chat-application-mean.vercel.app/","https://chat-application-mean-git-main-abhishekmishra0409s-projects.vercel.app/","https://chat-application-mean-2qhvdtuau-abhishekmishra0409s-projects.vercel.app/"],
             methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
             allowedHeaders: ["Content-Type", "Authorization"],
             credentials: true
