@@ -1,0 +1,26 @@
+<div class="relative inline-block">
+  <!-- Avatar -->
+  <div class="rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold"
+    [ngClass]="getSizeClass()" [style.backgroundColor]="user?.avatar ? 'transparent' : ''">
+    <!-- If avatar exists -->
+    <ng-container *ngIf="user?.avatar; else noAvatar">
+      <img [src]="user?.avatar" [alt]="user?.username" class="w-full h-full rounded-full object-cover" />
+    </ng-container>
+
+    <!-- Else show initials -->
+    <ng-template #noAvatar>
+      {{ getInitials() }}
+    </ng-template>
+  </div>
+
+  <!-- Online Status -->
+  <ng-container *ngIf="showStatus && user">
+    <span class="absolute -bottom-1 -right-1">
+      <span class="relative flex" [ngClass]="getStatusSizeClass()">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+          [ngClass]="getStatusColor()"></span>
+        <span class="relative inline-flex rounded-full h-full w-full" [ngClass]="getStatusColor()"></span>
+      </span>
+    </span>
+  </ng-container>
+</div>

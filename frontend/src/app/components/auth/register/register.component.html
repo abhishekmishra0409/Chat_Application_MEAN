@@ -1,0 +1,93 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-900 py-12 px-4 sm:px-6 lg:px-8 font-sans antialiased">
+  <div class="max-w-md w-full space-y-8 bg-gray-800 p-10 rounded-2xl shadow-2xl">
+    <div>
+      <h2 class="text-center text-3xl font-extrabold text-white">
+        Create your account
+      </h2>
+      <p class="mt-2 text-center text-sm text-gray-400">
+        Or
+        <a [routerLink]="['/login']" class="font-medium text-indigo-400 hover:text-indigo-300 transition-colors">
+          sign in to your account
+        </a>
+      </p>
+    </div>
+    <form class="mt-8 space-y-4" (ngSubmit)="onSubmit()">
+      <!-- Username Input -->
+      <div>
+        <input type="text" [(ngModel)]="username" name="username" required
+          class="appearance-none relative block w-full px-4 py-3 border border-gray-700 bg-gray-700 placeholder-gray-400 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors duration-200"
+          placeholder="Username" />
+      </div>
+
+      <!-- Email Input -->
+      <div>
+        <input type="email" [(ngModel)]="email" name="email" required
+          class="appearance-none relative block w-full px-4 py-3 border border-gray-700 bg-gray-700 placeholder-gray-400 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors duration-200"
+          placeholder="Email address" />
+      </div>
+
+      <!-- Password Input -->
+      <div class="relative">
+        <input [type]="passwordFieldType" [(ngModel)]="password" name="password" required
+          class="appearance-none relative block w-full px-4 py-3 border border-gray-700 bg-gray-700 placeholder-gray-400 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors duration-200"
+          placeholder="Password" />
+        <button type="button" (click)="togglePasswordVisibility()"
+          class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
+          <svg *ngIf="passwordFieldType === 'password'" class="h-5 w-5 text-gray-400 hover:text-gray-200" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+          <svg *ngIf="passwordFieldType === 'text'" class="h-5 w-5 text-gray-400 hover:text-gray-200" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7 1.274-4.057 5.065-7 9.542-7 1.343 0 2.614.249 3.825.75M12 19c1.343 0 2.614-.249 3.825-.75M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12s2 2 4 2s4-2 4-2" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12s-2-2-4-2s-4 2-4 2" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Confirm Password Input -->
+      <div class="relative">
+        <input [type]="confirmPasswordFieldType" [(ngModel)]="confirmPassword" name="confirmPassword" required
+          class="appearance-none relative block w-full px-4 py-3 border border-gray-700 bg-gray-700 placeholder-gray-400 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors duration-200"
+          placeholder="Confirm Password" />
+        <button type="button" (click)="toggleConfirmPasswordVisibility()"
+          class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
+          <svg *ngIf="confirmPasswordFieldType === 'password'" class="h-5 w-5 text-gray-400 hover:text-gray-200"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+          <svg *ngIf="confirmPasswordFieldType === 'text'" class="h-5 w-5 text-gray-400 hover:text-gray-200" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7 1.274-4.057 5.065-7 9.542-7 1.343 0 2.614.249 3.825.75M12 19c1.343 0 2.614-.249 3.825-.75M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12s2 2 4 2s4-2 4-2" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12s-2-2-4-2s-4 2-4 2" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Error message -->
+      <div *ngIf="error" class="rounded-lg bg-red-700 p-4 text-white text-center">
+        <div class="text-sm font-medium">{{ error }}</div>
+      </div>
+
+      <!-- Submit button -->
+      <div>
+        <button type="submit" [disabled]="isLoading" class="group relative w-full flex justify-center py-3 px-4 border border-transparent
+          text-sm font-bold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700
+          focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
+          disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200">
+          {{ isLoading ? 'Creating account...' : 'Sign up' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

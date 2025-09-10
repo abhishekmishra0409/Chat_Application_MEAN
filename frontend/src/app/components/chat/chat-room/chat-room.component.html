@@ -1,0 +1,274 @@
+<div class="flex h-screen bg-gray-900 text-gray-100 font-sans antialiased">
+  <!-- Profile Modal -->
+  <div *ngIf="showProfileModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
+    <div class="bg-gray-800 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
+      <!-- Header -->
+      <div class="px-6 py-5 border-b border-gray-700 bg-gray-900">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-bold text-white">
+            {{ selectedUser ? 'User Profile' : 'Group Info' }}
+          </h2>
+          <button (click)="closeProfileModal()" class="p-2 text-gray-400 hover:text-white rounded-lg transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="p-6 space-y-6">
+        <!-- Avatar -->
+        <div class="flex justify-center">
+          <div class="w-24 h-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center
+                     shadow-lg ring-4 ring-gray-600 ring-offset-2 ring-offset-gray-800">
+            <span class="text-white text-3xl font-bold">
+              {{ selectedUser ? (selectedUser.username.charAt(0) || 'U') : (selectedChatRoom?.name?.charAt(0) || 'G') }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-400 mb-1">Name</label>
+            <p class="text-lg font-semibold text-white">
+              {{ selectedUser ? selectedUser.username : selectedChatRoom?.name }}
+            </p>
+          </div>
+
+          <div *ngIf="selectedUser">
+            <label class="block text-sm font-medium text-gray-400 mb-1">Email</label>
+            <p class="text-white">{{ selectedUser.email }}</p>
+          </div>
+
+          <div *ngIf="selectedUser">
+            <label class="block text-sm font-medium text-gray-400 mb-1">Status</label>
+            <div class="flex items-center space-x-2">
+              <div [class]="'w-2 h-2 rounded-full ' + (selectedUser.isOnline ? 'bg-green-400' : 'bg-gray-500')"></div>
+              <span class="text-white">{{ selectedUser.isOnline ? 'Online' : 'Offline' }}</span>
+            </div>
+            <p class="text-xs text-gray-400 mt-1">
+              Last seen: {{ selectedUser.lastSeen | date:'medium' }}
+            </p>
+          </div>
+
+          <div *ngIf="selectedChatRoom?.description">
+            <label class="block text-sm font-medium text-gray-400 mb-1">Description</label>
+            <p class="text-white">{{ selectedChatRoom?.description }}</p>
+          </div>
+
+          <div *ngIf="selectedChatRoom">
+            <label class="block text-sm font-medium text-gray-400 mb-1">Participants
+              ({{ selectedChatRoom.participants.length || 0 }})</label>
+            <div class="space-y-2 max-h-40 overflow-y-auto">
+              <div *ngFor="let participant of selectedChatRoom.participants || []"
+                class="flex items-center space-x-3 p-2 bg-gray-700 rounded-lg">
+                <div class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center">
+                  <span class="text-white text-sm font-semibold">{{ participant.username.charAt(0) || 'U' }}</span>
+                </div>
+                <div class="flex-1">
+                  <span class="text-white text-sm">{{ participant.username }}</span>
+                  <p class="text-xs text-gray-400">{{ participant.email }}</p>
+                </div>
+                <span *ngIf="selectedChatRoom.admin && participant._id === selectedChatRoom.admin._id"
+                  class="text-xs text-indigo-400 bg-indigo-900 px-2 py-1 rounded">
+                  Admin
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="selectedChatRoom">
+            <label class="block text-sm font-medium text-gray-400 mb-1">Chat Type</label>
+            <p class="text-white">{{ selectedChatRoom.isGroup ? 'Group Chat' : 'Private Chat' }}</p>
+          </div>
+
+          <div *ngIf="selectedChatRoom">
+            <label class="block text-sm font-medium text-gray-400 mb-1">Created</label>
+            <p class="text-white">{{ selectedChatRoom.createdAt | date:'medium' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="px-6 py-4 border-t border-gray-700 bg-gray-900">
+        <button (click)="closeProfileModal()"
+          class="w-full px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar Overlay -->
+  <div *ngIf="isMobile && showChatList" class="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+    (click)="showChatList = false">
+  </div>
+
+  <!-- Sidebar -->
+  <div [class]="'bg-gray-800 shadow-xl flex flex-col overflow-hidden transition-all duration-300 ' +
+               (isMobile ?
+                 (showChatList ? 'fixed inset-y-0 left-0 w-80 z-50 transform translate-x-0' : 'fixed inset-y-0 left-0 w-80 z-50 transform -translate-x-full') :
+                 'w-80 relative')">
+
+    <!-- Back Button in Sidebar -->
+    <div class="p-4 border-b border-gray-700 md:hidden">
+      <button (click)="goBackToChatList()" class="flex items-center text-gray-400 hover:text-white transition-colors">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to Chats
+      </button>
+    </div>
+
+    <div class="p-6 border-b border-gray-700">
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold">Chats</h1>
+        <button (click)="toggleChatList()" class="p-2 text-gray-400 hover:text-white md:hidden">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="mt-4">
+        <input [(ngModel)]="searchQuery" type="text" placeholder="Search chats..."
+          class="w-full px-4 py-2 border border-gray-700 rounded-xl bg-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors duration-200" />
+      </div>
+    </div>
+
+    <div class="flex-1 overflow-y-auto">
+      <div class="divide-y divide-gray-700">
+        <div *ngFor="let chatRoom of getFilteredChatRooms()" (click)="openChat(chatRoom._id)"
+          [class.bg-gray-700]="isActiveChat(chatRoom._id)" [class.bg-gray-800]="!isActiveChat(chatRoom._id)"
+          class="p-4 hover:bg-gray-700 cursor-pointer transition-colors duration-200">
+          <div class="flex items-center space-x-4">
+            <div (click)="$event.stopPropagation(); showChatRoomProfile(chatRoom)"
+              class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center flex-shrink-0 cursor-pointer hover:bg-indigo-700 transition-colors">
+              <span class="text-white text-lg font-semibold">
+                {{ getOtherParticipant(chatRoom).charAt(0) }}
+              </span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <h3 class="text-base font-medium truncate text-white">
+                {{ getOtherParticipant(chatRoom) }}
+              </h3>
+              <p class="text-sm text-gray-400 truncate">
+                {{ getLastMessagePreview(chatRoom) }}
+              </p>
+              <p *ngIf="chatRoom.isGroup" class="text-xs text-indigo-400">Group • {{ chatRoom.participants.length }}
+                members</p>
+            </div>
+            <span *ngIf="chatRoom.lastMessage" class="text-xs text-gray-400 flex-shrink-0">
+              {{ chatRoom.lastMessage.createdAt | date:'shortTime' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Chat Area -->
+  <div class="flex-1 flex flex-col bg-gray-900">
+    <!-- Chat Header -->
+    <div class="bg-gray-800 border-b border-gray-700 px-6 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <!-- Back Button for Mobile -->
+          <button (click)="goBackToChatList()" class="p-2 text-gray-400 hover:text-white transition-colors md:hidden">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+              </path>
+            </svg>
+          </button>
+
+          <button (click)="toggleChatList()" class="p-2 text-gray-400 hover:text-white transition-colors md:hidden">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+
+          <div (click)="chatRoom && showChatRoomProfile(chatRoom)"
+            class="flex items-center space-x-3 flex-1 cursor-pointer hover:bg-gray-700 p-2 rounded-lg transition-colors">
+            <div class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
+              <span class="text-white font-semibold">{{ chatRoom?.name?.charAt(0) || 'G' }}</span>
+            </div>
+            <div class="min-w-0">
+              <h2 class="text-lg font-semibold text-white truncate">{{ chatRoom?.name || 'Loading...' }}</h2>
+              <p class="text-sm text-gray-400 truncate">
+                {{ typingUsers.length > 0 ? (typingUsers.join(', ') + ' is typing...') : 'Online' }}
+              </p>
+              <p *ngIf="chatRoom?.isGroup" class="text-xs text-indigo-400">{{ chatRoom?.participants?.length }}
+                participants</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Back Button for Desktop (in header) -->
+        <button (click)="goBackToChatList()"
+          class="hidden md:flex items-center text-gray-400 hover:text-white transition-colors p-2">
+          <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+            </path>
+          </svg>
+          <span class="text-sm">Back</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div #messageContainer class="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
+      <div *ngIf="isLoading" class="flex justify-center items-center h-32">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+      </div>
+
+      <div *ngFor="let message of messages"
+        [ngClass]="{'justify-end': message.sender._id === currentUser?._id, 'justify-start': message.sender._id !== currentUser?._id}"
+        class="flex animate-slide-in">
+        <div class="flex items-end space-x-2">
+          <div *ngIf="message.sender._id !== currentUser?._id" (click)="showUserProfile(message.sender)"
+            class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center flex-shrink-0 cursor-pointer hover:bg-indigo-700 transition-colors">
+            <span class="text-white text-sm font-semibold">{{ message.sender.username.charAt(0) }}</span>
+          </div>
+          <div [ngClass]="{
+                'bg-indigo-600 text-white rounded-bl-xl rounded-tl-xl rounded-tr-xl': message.sender._id === currentUser?._id,
+                'bg-gray-700 text-white rounded-br-xl rounded-tl-xl rounded-tr-xl': message.sender._id !== currentUser?._id
+              }" class="max-w-xs lg:max-w-md px-4 py-2 shadow-lg">
+            <p class="text-sm">{{ message.content }}</p>
+            <p class="text-xs opacity-75 mt-1 text-right">
+              {{ message.createdAt | date:'shortTime' }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!isLoading && messages.length === 0" class="flex justify-center items-center h-32">
+        <div class="text-center text-gray-500">
+          <svg class="w-12 h-12 mx-auto mb-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+            </path>
+          </svg>
+          <p class="text-gray-400">No messages yet. Start the conversation!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message Input -->
+    <div class="bg-gray-800 border-t border-gray-700 px-6 py-4">
+      <div class="flex space-x-3">
+        <input [(ngModel)]="newMessage" (input)="onTyping()" (keydown.enter)="sendMessage()" type="text"
+          placeholder="Type a message..."
+          class="flex-1 px-4 py-2 border border-gray-700 rounded-xl bg-gray-900 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors duration-200" />
+        <button (click)="sendMessage()" [disabled]="!newMessage.trim()"
+          class="px-3 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 transition-colors duration-200">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8">
+            </path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

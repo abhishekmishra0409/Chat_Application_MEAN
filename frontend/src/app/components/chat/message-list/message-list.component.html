@@ -1,0 +1,39 @@
+<div #messageContainer class="flex-1 overflow-y-auto px-6 py-4 space-y-4 custom-scrollbar">
+  <!-- Messages -->
+  <div *ngFor="let message of messages; trackBy: trackByMessageId" [class.justify-end]="isCurrentUser(message)"
+    [class.justify-start]="!isCurrentUser(message)" class="flex message-animation">
+
+    <div *ngIf="!isCurrentUser(message)" class="flex-shrink-0 mr-3">
+      <app-user-avatar [user]="message.sender" [size]="8"></app-user-avatar>
+    </div>
+
+    <div [class.bg-indigo-600]="isCurrentUser(message)" [class.bg-white]="!isCurrentUser(message)"
+      [class.text-white]="isCurrentUser(message)" class="max-w-xs lg:max-w-md px-4 py-2 rounded-lg shadow-sm">
+
+      <div *ngIf="!isCurrentUser(message)" class="text-xs font-medium mb-1">
+        {{ message.sender.username }}
+      </div>
+
+      <p class="text-sm break-words">{{ message.content }}</p>
+
+      <div class="flex items-center justify-end mt-1 space-x-1">
+        <span class="text-xs opacity-75">
+          {{ message.createdAt | date:'shortTime' }}
+        </span>
+        <span *ngIf="isCurrentUser(message) && message.isRead" class="text-xs">
+          ✓
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Typing Indicator -->
+  <div *ngIf="typingUsers.length > 0" class="flex items-center space-x-2 text-sm text-gray-500">
+    <div class="flex space-x-1">
+      <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0s"></div>
+      <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+      <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+    </div>
+    <span>{{ typingUsers.join(', ') }} is typing...</span>
+  </div>
+</div>

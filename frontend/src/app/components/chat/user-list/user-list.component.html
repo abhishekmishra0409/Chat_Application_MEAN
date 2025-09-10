@@ -1,0 +1,50 @@
+<div class="w-80 bg-white border-l border-gray-200 flex flex-col">
+  <!-- Header -->
+  <div class="p-4 border-b border-gray-200">
+    <h2 class="text-lg font-semibold text-gray-900">Participants</h2>
+
+    <!-- Search -->
+    <div class="mt-3">
+      <input [(ngModel)]="searchQuery" type="text" placeholder="Search users..."
+        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+    </div>
+  </div>
+
+  <!-- User List -->
+  <div class="flex-1 overflow-y-auto p-4 space-y-3">
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="flex justify-center items-center h-32">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+    </div>
+
+    <!-- User Items -->
+    <div *ngIf="!isLoading" class="space-y-3">
+      <div *ngFor="let user of getFilteredUsers()" class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+        <div class="flex items-center space-x-3">
+          <div class="relative">
+            <app-user-avatar [user]="user" [size]="10"></app-user-avatar>
+            <div class="absolute -bottom-1 -right-1">
+              <span class="relative flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+                  [ngClass]="getStatusColor(user.isOnline)"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3"
+                  [ngClass]="getStatusColor(user.isOnline)"></span>
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <p class="text-sm font-medium text-gray-900">
+              {{ user.username }}
+            </p>
+            <p class="text-xs text-gray-500">{{ user.email }}</p>
+          </div>
+        </div>
+
+        <span class="text-xs text-gray-400">
+          {{ user.isOnline ? 'Online' : (user.lastSeen | date: 'short') }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
