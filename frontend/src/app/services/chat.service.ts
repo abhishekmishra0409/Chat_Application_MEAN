@@ -9,7 +9,7 @@ import { Message } from '../models/message.model';
   providedIn: 'root'
 })
 export class ChatService {
-  private apiUrl = 'http://localhost:5000/api';
+  private apiUrl = 'https://chat-application-mean.onrender.com/api';
 
   constructor(private http: HttpClient) {}
 

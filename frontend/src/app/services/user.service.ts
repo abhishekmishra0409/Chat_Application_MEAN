@@ -7,7 +7,7 @@ import { User } from '../models/user.model';
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'http://localhost:5000/api';
+  private apiUrl = 'https://chat-application-mean.onrender.com/api';
 
   constructor(private http: HttpClient) {}
 

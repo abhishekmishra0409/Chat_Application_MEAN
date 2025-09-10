@@ -13,7 +13,7 @@ export class SocketService {
   private isConnected = false;
 
   constructor(private authService: AuthService) {
-    this.socket = io('http://localhost:5000', {
+    this.socket = io('https://chat-application-mean.onrender.com', {
       auth: {
         token: this.authService.getToken()
       }
