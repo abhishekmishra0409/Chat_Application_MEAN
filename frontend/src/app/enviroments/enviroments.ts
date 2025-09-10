@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:5000/api',
-  socketUrl: 'http://localhost:5000',
+  apiUrl: 'https://chat-application-mean.onrender.com/api',
+  socketUrl: 'https://chat-application-mean.onrender.com',
   appName: 'ChatApp',
   version: '1.0.0',
   features: {
