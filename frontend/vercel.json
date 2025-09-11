@@ -4,13 +4,10 @@
     "src": "dist/frontend/browser/**/*",
     "use": "@vercel/static"
   }],
-  {
-    "rewrites": [{
-      "source": "/(.*)",
-      "destination": "dist/frontend/browser/index.html"
-    }]
-  }
-
+  "rewrites": [{
+    "source": "/(.*)",
+    "destination": "/index.html"
+  }],
   "headers": [{
       "source": "/(.*)",
       "headers": [{
