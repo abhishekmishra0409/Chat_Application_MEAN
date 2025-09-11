@@ -10,7 +10,7 @@ import { ProfileComponent } from './components/shared/profile/profile.component'
 
 export const routes: Routes = [
   { path: '', redirectTo: '/chat', pathMatch: 'full' },
-  { path: '/', component: LoginComponent, canActivate: [GuestGuard] },
+  { path: 'login', component: LoginComponent, canActivate: [GuestGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [GuestGuard] },
   { path: 'chat', component: ChatListComponent, canActivate: [AuthGuard] },
   { path: 'chat/:id', component: ChatRoomComponent, canActivate: [AuthGuard] },
