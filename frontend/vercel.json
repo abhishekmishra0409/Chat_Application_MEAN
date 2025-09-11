@@ -1,40 +1,16 @@
 {
   "version": 2,
   "builds": [{
-    "src": "dist/frontend/browser/**/*",
-    "use": "@vercel/static"
-  }],
-  "rewrites": [{
-    "source": "/(.*)",
-    "destination": "/index.html"
-  }],
-  "headers": [{
-      "source": "/(.*)",
-      "headers": [{
-        "key": "Cache-Control",
-        "value": "public, max-age=3600"
-      }]
+      "src": "dist/frontend/browser/index.html",
+      "use": "@vercel/static"
     },
     {
-      "source": "/assets/(.*)",
-      "headers": [{
-        "key": "Cache-Control",
-        "value": "public, max-age=31536000, immutable"
-      }]
-    },
-    {
-      "source": "/(.*)\\.js",
-      "headers": [{
-        "key": "Cache-Control",
-        "value": "public, max-age=31536000, immutable"
-      }]
-    },
-    {
-      "source": "/(.*)\\.css",
-      "headers": [{
-        "key": "Cache-Control",
-        "value": "public, max-age=31536000, immutable"
-      }]
+      "src": "dist/frontend/browser/**",
+      "use": "@vercel/static"
     }
-  ]
+  ],
+  "routes": [{
+    "src": "/(.*)",
+    "dest": "dist/frontend/browser/index.html"
+  }]
 }
